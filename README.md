@@ -2,17 +2,17 @@
 
 > Status: :pencil: Planning
 
-## Summary :bookmark_tabs:
+## Index :bookmark_tabs:
 
-:cd: [Description](#descrição-clipboard) 
+:cd: [Description](#description-clipboard) 
 
-:cd: [Architecture](#funcionalidade-gear)    
+:cd: [Architecture](#architecture-gear)    
 
 :cd: [Use Case](#use-case-office) 
 
-:cd: [Technologies](#outras-tecnologias-books)
+:cd: [Technologies](#technologies-books)
 
-:cd: [Contribute](#contribuir-gift) 
+:cd: [Contribute](#contribute-gift) 
 
 
 ## Description :clipboard:
@@ -59,7 +59,7 @@ The project is divided into two user domains:
     - **User:** Travel Agencies;
     - **Functionality:** Submit and maintain destination and tourist attractions information, which will be used by the chatbot agent during conversation with potential clients.
 
-## Caso de Uso :office:
+## Use Case :office:
 
 As the adoption of AI-powered systems is increasing rapidly, the demand for applications that can provide personalized services is also growing. The Travel AI Agent is a system that aims to provide a personalized and friendly experience for travelers searching destinations and tourist attractions, what we call the **Destination Discovery Process**:
 -  **Destination Discovery:** Traveler is starting the research and needs assistance to find the best travel destination.
