@@ -23,11 +23,9 @@ The Travel AI Agent is a chatbot system designed to help people in the <b>Destin
 
 ## Architecture :gear:
 
-<object data="https://github.com/GustavoHerreroNunes/travel-ai-agent/blob/main/readme-assets/architecture.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="https://github.com/GustavoHerreroNunes/travel-ai-agent/blob/main/readme-assets/architecture.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/GustavoHerreroNunes/travel-ai-agent/blob/main/readme-assets/architecture.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+![Architecture Diagram][architecture-jpg]
+
+> *[Download Architecture Diagram (PDF)][architecture-pdf]*
 
 ### Services and Modules
 
@@ -84,6 +82,8 @@ As the adoption of AI-powered systems is increasing rapidly, the demand for appl
 If you have any idea, suggestion, or saw any error, you can tell me [here (Issues)][issues].
 
 <!---Links utilizados no documento-->
+
+[architecture-jpg]: https://github.com/GustavoHerreroNunes/travel-ai-agent/blob/main/readme-assets/architecture.jpg
 
 [architecture-pdf]: https://github.com/GustavoHerreroNunes/travel-ai-agent/blob/main/readme-assets/architecture.pdf
 
