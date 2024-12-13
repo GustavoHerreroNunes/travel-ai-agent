@@ -68,7 +68,7 @@ As the adoption of AI-powered systems is increasing rapidly, the demand for appl
 
 ## Technologies :books:
 
-1. **ReactJS**
+1. **Flutter**
     - **Usage:** Provides the user interface for the chatbot agent and the management module, enabling the travelers and travel agencies to interact with the system.
 1. **Google Maps API**
     - **Usage:** Provides location data, photos and user reviews to support the suggestions of attractions and destinations.
