@@ -1,7 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 
 class FloatingForm extends StatefulWidget {
-  const FloatingForm({super.key});
+  const FloatingForm({
+    super.key,
+    required this.heading,
+    this.subHeading,
+    required this.textFields,
+    required this.formButtons  
+  });
+
+  final String heading;
+  final String? subHeading;
+  final List<TextFormFieldData> textFields;
+  final List<FormButtonData> formButtons;
 
   @override
   State<FloatingForm> createState() => _FloatingFormState();
@@ -12,31 +26,51 @@ class _FloatingFormState extends State<FloatingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 500,
-      color: Colors.grey,
+    List<Widget> formField = widget.textFields.map((data) => TextFormField(
+      decoration: InputDecoration(
+        labelText: data.label,
+        hintText: data.hint ?? "",
+        border: OutlineInputBorder()
+      ),
+      validator:(value) => data.validator(value)
+    )).toList();
+
+    List<Widget> formButtons = widget.formButtons.map((data) => getDefaultButton(data, _formKey)).toList();
+
+    return Container( 
+      color: Color.fromRGBO(243, 243, 243, 1),
       child: Padding(padding: EdgeInsets.only(top: 70, bottom: 70, left: 25, right: 25), child: 
         Column(
-          spacing: 24,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Login"),
-            Text("Welcome back, Traveler!"),
-            SizedBox(height: 18),
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: "Email",
-                hintText: "katherin.johnson@email.com"
-              ),
-              validator: (value) {
-                if(value != null && value.isNotEmpty){
-                  return null;
-                }else{
-                  return "Please, fill in this field";
-                }
-              },
+            Text(widget.heading, style: 
+              TextStyle(
+                fontSize: 45,
+                fontWeight: FontWeight.w600,
+              )),
+            Text(widget.subHeading ?? ""),
+            SizedBox(height: 66),
+            Form(
+              key: _formKey,
+              child: Column(spacing: 17, children: [...formField, ...formButtons])
             )
           ],
         ))
     );
   }
+}
+
+class TextFormFieldData{
+  const TextFormFieldData({
+    required this.label,
+    this.hint,
+    this.isRequired,
+    required this.validator
+  });
+  
+  final String label;
+  final String? hint;
+  final bool? isRequired;
+  final Function(String? value) validator;
 }
