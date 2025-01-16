@@ -3,8 +3,21 @@ import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 import 'package:travel_ai_agent/features/components/floating_form/floating_form.dart';
 
-class ForgotPassPage extends StatelessWidget {
-  const ForgotPassPage({super.key});
+class ForgotPassPage extends StatefulWidget {
+  ForgotPassPage({super.key});
+
+  @override
+  ForgotPassPageState createState() => ForgotPassPageState();
+}
+
+class ForgotPassPageState extends State<ForgotPassPage> {
+  final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +25,10 @@ class ForgotPassPage extends StatelessWidget {
       TextFormFieldData(
         label: "Email",
         hint: "example@email.com",
+        controller: _emailController,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return "Required field";
+            return "Please, fill in this field";
           } else if (!value.contains("@")) {
             return "Please, enter a valid email address";
           }
@@ -30,6 +44,7 @@ class ForgotPassPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FloatingForm(
                     heading: "Forgot Password",

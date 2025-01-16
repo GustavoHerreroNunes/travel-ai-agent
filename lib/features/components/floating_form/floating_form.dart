@@ -66,11 +66,13 @@ class TextFormFieldData{
     required this.label,
     this.hint,
     this.isRequired,
+    required this.controller,
     required this.validator
   });
   
   final String label;
   final String? hint;
   final bool? isRequired;
+  final TextEditingController controller;
   final Function(String? value) validator;
 }

@@ -3,33 +3,59 @@ import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 import 'package:travel_ai_agent/features/components/floating_form/floating_form.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
+
+  @override
+  LoginPageState createState() => LoginPageState();
+}
+
+class LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final loginFields = [
-      TextFormFieldData(label: "Email", hint: "example@email.com", validator: (value){
-        if(value == null || value.isEmpty){
-          return "Required field";
-        }else if (!value.contains("@")){
-          return "Please, enter a valid email address";
-        }
-        return null;
-      }),
-      TextFormFieldData(label: "Password", hint: "********", validator: (value) {
-        if(value == null || value.isEmpty){
-          return "Required field";
-        }
-        return null;
-      })
+      TextFormFieldData(
+        label: "Email",
+        hint: "example@email.com",
+        controller: _emailController,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Required field";
+          } else if (!value.contains("@")) {
+            return "Please, enter a valid email address";
+          }
+          return null;
+        },
+      ),
+      TextFormFieldData(
+        label: "Password",
+        hint: "********",
+        controller: _passwordController,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Required field";
+          }
+          return null;
+        },
+      ),
     ];
+
     return Scaffold(
-      body: Row(
+            body: Row(
         children: [
           Expanded(
             child: Padding(padding: EdgeInsets.only(left: 50, right: 50), child: 
-              Column(children: [
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 FloatingForm(
                   heading: "Login",
                   subHeading: "Welcome back, traveler!",

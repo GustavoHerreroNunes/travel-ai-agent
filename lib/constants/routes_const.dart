@@ -15,18 +15,15 @@ final GoRouter routerConfig = GoRouter(
     ),
     GoRoute(
       path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-        print('Navigating to HomePage');
-        return const HomePage();
-      },
+      builder: (context, state) => const HomePage(),
     ),
     GoRoute(
       path: '/signup',
-      builder:(context, state) => const SignupPage(),
+      builder:(context, state) => SignUpPage(),
     ),
     GoRoute(
       path: '/forgot_password',
-      builder: (context, state) => const ForgotPassPage(),
+      builder: (context, state) => ForgotPassPage(),
     )
   ],
 );
