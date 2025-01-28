@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
@@ -54,11 +55,9 @@ class ForgotPassPageState extends State<ForgotPassPage> {
                       FormButtonData(
                         label: "Send Verification E-mail",
                         validateForm: true,
-                        onPressed: (isFormValid) {
+                        onPressed: (isFormValid) async {
                           if (isFormValid!) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Verification email sent!")),
-                            );
+                            await _resetPassword(_emailController.text, context);
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Error: Form has invalid fields.")),
@@ -136,5 +135,24 @@ class ForgotPassPageState extends State<ForgotPassPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _resetPassword(String email, BuildContext context) async{
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Verification email sent!")),
+      );
+    } on FirebaseAuthException catch (e){
+      
+      String errorMessage = "An error occurred while reseting your password. Please try again later";
+
+      print("Error '${e.code}' - ${e.message}");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage))
+      );
+    }
   }
 }
