@@ -54,6 +54,7 @@ class SignUpPageState extends State<SignUpPage> {
       TextFormFieldData(
         label: "Password",
         hint: "********",
+        isPassword: true,
         controller: _passwordController,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -77,10 +78,9 @@ class SignUpPageState extends State<SignUpPage> {
                   subHeading: "Please, fill in the next fields to get started",
                   textFields: loginFields,
                   formButtons: [
-                    FormButtonData(label: "Get Started", validateForm: true, onPressed: (isFormValid) {
+                    FormButtonData(label: "Get Started", validateForm: true, onPressed: (isFormValid) async {
                       if(isFormValid!){
-                        print("Creating user ${_nameController.text}, email: '${_emailController.text}' and password: '${_passwordController.text}'");
-                        _signUp(
+                        await _signUp(
                           _nameController.text,
                           _emailController.text,
                           _passwordController.text,
@@ -95,7 +95,7 @@ class SignUpPageState extends State<SignUpPage> {
                   ],
                 ),
                 SizedBox(height: 10),
-                getDefaultButton(FormButtonData(
+                DefaultButton(buttonData: FormButtonData(
                     label: 'Back to Login',
                     type: ButtonType.link, 
                     onPressed: (valid){
@@ -105,7 +105,7 @@ class SignUpPageState extends State<SignUpPage> {
                         context.go('/');
                       }
                     }
-                  ), null)
+                  ), formKey: null)
               ]) 
             )),
           Expanded(

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 
@@ -32,11 +30,13 @@ class _FloatingFormState extends State<FloatingForm> {
         hintText: data.hint ?? "",
         border: OutlineInputBorder()
       ),
+      obscureText: data.isPassword ?? false,
+      focusNode: data.focusNode,
       controller: data.controller,
       validator:(value) => data.validator(value)
     )).toList();
 
-    List<Widget> formButtons = widget.formButtons.map((data) => getDefaultButton(data, _formKey)).toList();
+    List<Widget> formButtons = widget.formButtons.map((data) => DefaultButton(buttonData: data, formKey: _formKey)).toList();
 
     return Container( 
       color: Color.fromRGBO(243, 243, 243, 1),
@@ -67,6 +67,8 @@ class TextFormFieldData{
     required this.label,
     this.hint,
     this.isRequired,
+    this.isPassword,
+    this.focusNode,
     required this.controller,
     required this.validator
   });
@@ -74,6 +76,8 @@ class TextFormFieldData{
   final String label;
   final String? hint;
   final bool? isRequired;
+  final bool? isPassword;
   final TextEditingController controller;
+  final FocusNode? focusNode;
   final Function(String? value) validator;
 }
