@@ -7,8 +7,9 @@ Widget getDefaultButton(FormButtonData buttonData, GlobalKey<FormState>? formKey
         onPressed:() {
           if(buttonData.validateForm ?? false){
             buttonData.onPressed(formKey!.currentState!.validate());
+          }else{
+            buttonData.onPressed(true);
           }
-          buttonData.onPressed(null);
         },
         style: ((buttonData.type ?? ButtonType.submit) == ButtonType.submit) 
           ? _submitStyle 

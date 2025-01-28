@@ -77,10 +77,14 @@ class SignUpPageState extends State<SignUpPage> {
                   subHeading: "Please, fill in the next fields to get started",
                   textFields: loginFields,
                   formButtons: [
-                    FormButtonData(label: "Get Started", onPressed: (isFormValid) {
+                    FormButtonData(label: "Get Started", validateForm: true, onPressed: (isFormValid) {
                       if(isFormValid!){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Form is Valid!!!"))
+                        print("Creating user ${_nameController.text}, email: '${_emailController.text}' and password: '${_passwordController.text}'");
+                        _signUp(
+                          _nameController.text,
+                          _emailController.text,
+                          _passwordController.text,
+                          context
                         );
                       }else{
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -159,6 +163,11 @@ class SignUpPageState extends State<SignUpPage> {
         SnackBar(content: Text("Error trying to sign up. Please, try again later"))
       );
       print("Error ${e.code}: ${e.message}");
+    } catch (e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error trying to sign up. Please, try again later"))
+      );
+      print("Invalid condition reached: $e");
     }
   }
 }

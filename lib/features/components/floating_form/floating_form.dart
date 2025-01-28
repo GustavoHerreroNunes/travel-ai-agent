@@ -32,6 +32,7 @@ class _FloatingFormState extends State<FloatingForm> {
         hintText: data.hint ?? "",
         border: OutlineInputBorder()
       ),
+      controller: data.controller,
       validator:(value) => data.validator(value)
     )).toList();
 
