@@ -1,25 +1,54 @@
 import 'package:flutter/material.dart';
 
-Widget getDefaultButton(FormButtonData buttonData, GlobalKey<FormState>? formKey){
-  return SizedBox(
+class DefaultButton extends StatefulWidget {
+  final FormButtonData buttonData;
+  final GlobalKey<FormState>? formKey;
+
+  DefaultButton({required this.buttonData, this.formKey});
+
+  @override
+  _DefaultButtonState createState() => _DefaultButtonState();
+}
+
+class _DefaultButtonState extends State<DefaultButton> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
       width: double.infinity,
       child: TextButton(
-        onPressed:() {
-          if(buttonData.validateForm ?? false){
-            buttonData.onPressed(formKey!.currentState!.validate());
-          }else{
-            buttonData.onPressed(true);
+        onPressed: () async {
+          setState(() {
+            _isLoading = true;
+          });
+
+          bool isValid = true;
+          if (widget.buttonData.validateForm ?? false) {
+            isValid = widget.formKey!.currentState!.validate();
           }
+
+          await widget.buttonData.onPressed(isValid);
+
+          setState(() {
+            _isLoading = false;
+          });
         },
-        style: ((buttonData.type ?? ButtonType.submit) == ButtonType.submit) 
-          ? _submitStyle 
-          : _linkStyle,
-        child: Align(
-          alignment: buttonData.alignment ?? Alignment.center,
-          child: Text(buttonData.label)
-        ),
-      )
+        style: ((widget.buttonData.type ?? ButtonType.submit) == ButtonType.submit)
+            ? _submitStyle
+            : _linkStyle,
+        child: _isLoading
+            ? CircularProgressIndicator(
+              strokeWidth: 2,
+              semanticsLabel: widget.buttonData.semanticLoadingLabel ?? "Loading...",
+            )
+            : Align(
+                alignment: widget.buttonData.alignment ?? Alignment.center,
+                child: Text(widget.buttonData.label),
+              ),
+      ),
     );
+  }
 }
 
 ButtonStyle _submitStyle = TextButton.styleFrom(
@@ -46,7 +75,8 @@ class FormButtonData{
     this.type,
     this.alignment,
     this.validateForm,
-    required this.onPressed
+    this.semanticLoadingLabel,
+    required this.onPressed,
   });
 
   final String label;
@@ -54,6 +84,7 @@ class FormButtonData{
   final AlignmentGeometry? alignment;
   final bool? validateForm;
   final Function(bool? isFormValid) onPressed;
+  final String? semanticLoadingLabel;
 }
 
 enum ButtonType{

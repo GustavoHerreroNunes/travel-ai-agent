@@ -69,8 +69,8 @@ class ForgotPassPageState extends State<ForgotPassPage> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  getDefaultButton(
-                    FormButtonData(
+                  DefaultButton(
+                    buttonData: FormButtonData(
                       label: "Back to Login",
                       type: ButtonType.link,
                       onPressed: (valid) {
@@ -81,7 +81,7 @@ class ForgotPassPageState extends State<ForgotPassPage> {
                         }
                       },
                     ),
-                    null,
+                    formKey: null
                   ),
                 ],
               ),
