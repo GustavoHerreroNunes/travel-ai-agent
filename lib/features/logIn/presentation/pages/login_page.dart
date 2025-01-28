@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
@@ -13,11 +14,13 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _emailFocus = FocusNode();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _emailFocus.dispose();
     super.dispose();
   }
 
@@ -27,6 +30,7 @@ class LoginPageState extends State<LoginPage> {
       TextFormFieldData(
         label: "Email",
         hint: "example@email.com",
+        focusNode: _emailFocus,
         controller: _emailController,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -40,6 +44,7 @@ class LoginPageState extends State<LoginPage> {
       TextFormFieldData(
         label: "Password",
         hint: "********",
+        isPassword: true,
         controller: _passwordController,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -71,10 +76,12 @@ class LoginPageState extends State<LoginPage> {
                         );
                         context.push('/forgot_password');
                     }),
-                    FormButtonData(label: "Sign In", validateForm: true, onPressed: (isFormValid) {
+                    FormButtonData(label: "Sign In", validateForm: true, onPressed: (isFormValid) async {
                       if(isFormValid!){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Form is Valid!!!"))
+                        await _signIn(
+                          _emailController.text, 
+                          _passwordController.text, 
+                          context
                         );
                       }else{
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -85,13 +92,14 @@ class LoginPageState extends State<LoginPage> {
                   ],
                 ),
                 SizedBox(height: 10),
-                getDefaultButton(FormButtonData(
+                DefaultButton(
+                  buttonData: FormButtonData(
                     label: "Create an Account",
                     type: ButtonType.link, 
                     onPressed: (valid){
                       context.push('/signup');
                     }
-                  ), null)
+                  ), formKey: null)
               ])
             )),
           Expanded(
@@ -126,5 +134,31 @@ class LoginPageState extends State<LoginPage> {
         ],
       )
     );
+  }
+
+  Future<void> _signIn(String email, String password, BuildContext context) async{
+    try{
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Logged in successfully! Welcome back, Traveler!"))
+      );
+
+    } on FirebaseAuthException catch (e) {
+      String errorMessage = "An error occurred during sign in. Please try again later";
+
+      if(e.code == 'invalid-credential'){
+        errorMessage = 'Email or password are invalid.';
+      }
+
+      print("Error '${e.code}' - ${e.message}");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage))
+      );
+      
+      _emailFocus.requestFocus();
+
+    }
   }
 }
