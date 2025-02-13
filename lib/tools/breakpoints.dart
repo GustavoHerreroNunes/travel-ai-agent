@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Breakpoints {
+class MediaQueryController {
   static final List<double> _compact = [599];
   static final List<double> _medium = [600, 839];
   static final List<double> _expanded = [840];
@@ -13,17 +13,17 @@ class Breakpoints {
     return MediaQuery.sizeOf(context).height;
   }
 
-  static Options getDeviceBreakpoint(BuildContext context){
+  static Breakpoint getDeviceBreakpoint(BuildContext context){
     final double windowWidth = getWindowWidth(context);
     if(windowWidth <= _compact[0]){
-      return Options.compact;
+      return Breakpoint.compact;
     }else if(windowWidth >= _medium[0] && windowWidth <= _medium[1]){
-      return Options.medium;
+      return Breakpoint.medium;
     }
-    return Options.expanded;
+    return Breakpoint.expanded;
   }
 }
-enum Options{
+enum Breakpoint{
   compact,
   medium,
   expanded

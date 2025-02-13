@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 import 'package:travel_ai_agent/features/components/floating_form/floating_form.dart';
+import 'package:travel_ai_agent/tools/breakpoints.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -15,6 +16,9 @@ class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocus = FocusNode();
+  late Breakpoint breakpoint;
+  late Size windowSize;
+  late double xPadding;
 
   @override
   void dispose() {
@@ -25,7 +29,21 @@ class LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    breakpoint = MediaQueryController.getDeviceBreakpoint(context);
+    windowSize = Size(
+      MediaQueryController.getWindowWidth(context),
+      MediaQueryController.getWindowHeight(context)
+    );
+    xPadding = breakpoint == Breakpoint.compact ? 0 : 50;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("[breakpoint]: $breakpoint");
+
     final loginFields = [
       TextFormFieldData(
         label: "Email",
@@ -56,86 +74,115 @@ class LoginPageState extends State<LoginPage> {
     ];
 
     return Scaffold(
-            body: Row(
+      body: SingleChildScrollView(child: 
+        Row(
+          children: [
+            Expanded(
+              child: Padding(padding: EdgeInsets.only(left: xPadding, right: xPadding), child: 
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  if(breakpoint == Breakpoint.compact || breakpoint == Breakpoint.medium)
+                    _getMediumCompactMedia(),
+                  FloatingForm(
+                    heading: "Login",
+                    subHeading: "Welcome back, traveler!",
+                    textFields: loginFields,
+                    breakpoint: breakpoint,
+                    formButtons: [
+                      FormButtonData(
+                        label: "Forgot Password?", 
+                        type: ButtonType.link, 
+                        alignment: Alignment.centerRight, 
+                        onPressed: (valid){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Clicked the link"))
+                          );
+                          context.push('/forgot_password');
+                      }),
+                      FormButtonData(label: "Sign In", validateForm: true, onPressed: (isFormValid) async {
+                        if(isFormValid!){
+                          await _signIn(
+                            _emailController.text, 
+                            _passwordController.text, 
+                            context
+                          );
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Error: Form has invalid fields."))
+                          );
+                        }
+                      }),
+                      if(breakpoint != Breakpoint.expanded)
+                        FormButtonData(
+                          label: "Create an Account",
+                          type: ButtonType.link, 
+                          onPressed: (valid){
+                            context.push('/signup');
+                          }
+                        )
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  if(breakpoint == Breakpoint.expanded)
+                    DefaultButton(
+                      buttonData: FormButtonData(
+                        label: "Create an Account",
+                        type: ButtonType.link, 
+                        onPressed: (valid){
+                          context.push('/signup');
+                        }
+                      ), formKey: null)
+                ])
+              )),
+            if(breakpoint == Breakpoint.expanded)            
+              _getExpandedMedia()
+          ],
+        )
+    ));
+  }
+
+  Widget _getExpandedMedia(){
+    return SizedBox(
+      height: windowSize.height,
+      width: windowSize.width/2.3,
+      child: Column(
         children: [
-          Expanded(
-            child: Padding(padding: EdgeInsets.only(left: 50, right: 50), child: 
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                FloatingForm(
-                  heading: "Login",
-                  subHeading: "Welcome back, traveler!",
-                  textFields: loginFields,
-                  formButtons: [
-                    FormButtonData(
-                      label: "Forgot Password?", 
-                      type: ButtonType.link, 
-                      alignment: Alignment.centerRight, 
-                      onPressed: (valid){
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Clicked the link"))
-                        );
-                        context.push('/forgot_password');
-                    }),
-                    FormButtonData(label: "Sign In", validateForm: true, onPressed: (isFormValid) async {
-                      if(isFormValid!){
-                        await _signIn(
-                          _emailController.text, 
-                          _passwordController.text, 
-                          context
-                        );
-                      }else{
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Error: Form has invalid fields."))
-                        );
-                      }
-                    }),
+          Expanded(flex: 3, child: Container(decoration: 
+                                    BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage("project_banner.jpg"),
+                                        fit: BoxFit.cover,
+                                        alignment: Alignment.center)))),
+          Expanded(flex: 1, child: 
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(color: Colors.red),
+              
+              child: Padding(padding: EdgeInsets.only(right: 30), child: 
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Travel AI Agent", style: TextStyle(fontSize: 65, fontWeight: FontWeight.w600, color: Colors.white),),
+                    Text("Discover the Amazing!", style: TextStyle(fontSize: 20, color: Colors.white))
                   ],
-                ),
-                SizedBox(height: 10),
-                DefaultButton(
-                  buttonData: FormButtonData(
-                    label: "Create an Account",
-                    type: ButtonType.link, 
-                    onPressed: (valid){
-                      context.push('/signup');
-                    }
-                  ), formKey: null)
-              ])
-            )),
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(flex: 3, child: Container(decoration: 
-                                          BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage("project_banner.jpg"),
-                                              fit: BoxFit.cover,
-                                              alignment: Alignment.center)))),
-                Expanded(flex: 1, child: 
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.red),
-                    
-                    child: Padding(padding: EdgeInsets.only(right: 30), child: 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Travel AI Agent", style: TextStyle(fontSize: 65, fontWeight: FontWeight.w600, color: Colors.white),),
-                          Text("Discover the Amazing!", style: TextStyle(fontSize: 20, color: Colors.white))
-                        ],
-                      )
-                    )
-                  )
                 )
-              ],
-            ),
+              )
+            )
           )
         ],
-      )
+      ),
     );
   }
 
+  Widget _getMediumCompactMedia(){
+    return
+      Container(height: 100, decoration: 
+                  BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("project_banner.jpg"),
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center)));
+  }
   Future<void> _signIn(String email, String password, BuildContext context) async{
     try{
       await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);

@@ -21,7 +21,8 @@ class TravelAIAgent extends StatelessWidget {
     return MaterialApp.router(
       title: 'Travel AI Agent',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange)
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        useMaterial3: true
       ),
       routerConfig: routerConfig,
     );

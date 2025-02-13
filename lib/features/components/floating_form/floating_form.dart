@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
+import 'package:travel_ai_agent/tools/breakpoints.dart';
 
 class FloatingForm extends StatefulWidget {
   const FloatingForm({
@@ -7,13 +8,15 @@ class FloatingForm extends StatefulWidget {
     required this.heading,
     this.subHeading,
     required this.textFields,
-    required this.formButtons  
+    required this.formButtons,
+    this.breakpoint = Breakpoint.expanded
   });
 
   final String heading;
   final String? subHeading;
   final List<TextFormFieldData> textFields;
   final List<FormButtonData> formButtons;
+  final Breakpoint breakpoint;
 
   @override
   State<FloatingForm> createState() => _FloatingFormState();
@@ -38,9 +41,14 @@ class _FloatingFormState extends State<FloatingForm> {
 
     List<Widget> formButtons = widget.formButtons.map((data) => DefaultButton(buttonData: data, formKey: _formKey)).toList();
 
+    final double yPadding = 
+      widget.breakpoint == Breakpoint.compact ? 10  
+      : widget.breakpoint == Breakpoint.medium ? 20
+      : 50;
+
     return Container( 
       color: Color.fromRGBO(243, 243, 243, 1),
-      child: Padding(padding: EdgeInsets.only(top: 70, bottom: 70, left: 25, right: 25), child: 
+      child: Padding(padding: EdgeInsets.only(top: yPadding, bottom: yPadding, left: 25, right: 25), child: 
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -51,7 +59,7 @@ class _FloatingFormState extends State<FloatingForm> {
                 fontWeight: FontWeight.w600,
               )),
             Text(widget.subHeading ?? ""),
-            SizedBox(height: 66),
+            SizedBox(height: yPadding),
             Form(
               key: _formKey,
               child: Column(spacing: 17, children: [...formField, ...formButtons])
