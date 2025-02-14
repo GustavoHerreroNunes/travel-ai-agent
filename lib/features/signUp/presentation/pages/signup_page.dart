@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 import 'package:travel_ai_agent/features/components/floating_form/floating_form.dart';
+import 'package:travel_ai_agent/template/authentication_page.dart';
+import 'package:travel_ai_agent/tools/breakpoints.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({super.key});
@@ -16,6 +18,8 @@ class SignUpPageState extends State<SignUpPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late Breakpoint breakpoint;
+  late Size windowSize;
 
   @override
   void dispose() {
@@ -23,6 +27,14 @@ class SignUpPageState extends State<SignUpPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    breakpoint = MediaQueryController.getDeviceBreakpoint(context);
+    windowSize = MediaQueryController.getWindowSize(context);
   }
 
   @override
@@ -67,16 +79,13 @@ class SignUpPageState extends State<SignUpPage> {
       ),
     ];
 
-    return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            child: Padding(padding: EdgeInsets.only(left: 50, right: 50), child:
-              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                FloatingForm(
+    return AuthenticationPage(
+      pageContent: FloatingForm(
                   heading: "Sign Up",
                   subHeading: "Please, fill in the next fields to get started",
                   textFields: loginFields,
+                  breakpoint: breakpoint,
+                  windowSize: windowSize,
                   formButtons: [
                     FormButtonData(label: "Get Started", validateForm: true, onPressed: (isFormValid) async {
                       if(isFormValid!){
@@ -92,53 +101,33 @@ class SignUpPageState extends State<SignUpPage> {
                         );
                       }
                     }),
+                    if(breakpoint == Breakpoint.compact || breakpoint == Breakpoint.medium)
+                      FormButtonData(
+                        label: 'Back to Login',
+                        type: ButtonType.link, 
+                        onPressed: (valid){
+                          if(context.canPop()){
+                            context.pop();
+                          }else{
+                            context.go('/');
+                          }
+                        }
+                      )
                   ],
                 ),
-                SizedBox(height: 10),
-                DefaultButton(buttonData: FormButtonData(
-                    label: 'Back to Login',
-                    type: ButtonType.link, 
-                    onPressed: (valid){
-                      if(context.canPop()){
-                        context.pop();
-                      }else{
-                        context.go('/');
-                      }
-                    }
-                  ), formKey: null)
-              ]) 
-            )),
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(flex: 3, child: Container(decoration: 
-                                          BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage("project_banner.jpg"),
-                                              fit: BoxFit.cover,
-                                              alignment: Alignment.center)))),
-                Expanded(flex: 1, child: 
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(color: Colors.red),
-                    
-                    child: Padding(padding: EdgeInsets.only(right: 30), child: 
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Travel AI Agent", style: TextStyle(fontSize: 65, fontWeight: FontWeight.w600, color: Colors.white),),
-                          Text("Discover the Amazing!", style: TextStyle(fontSize: 20, color: Colors.white))
-                        ],
-                      )
-                    )
-                  )
-                )
-              ],
-            ),
-          )
-        ],
-      )
+      alternativeButton: DefaultButton(buttonData: FormButtonData(
+                          label: 'Back to Login',
+                          type: ButtonType.link, 
+                          onPressed: (valid){
+                            if(context.canPop()){
+                              context.pop();
+                            }else{
+                              context.go('/');
+                            }
+                          }
+                        ), formKey: null),
+      breakpoint: breakpoint,
+      windowSize: windowSize,
     );
   }
 

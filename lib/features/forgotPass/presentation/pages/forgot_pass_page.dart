@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/floating_form/default_button.dart';
 import 'package:travel_ai_agent/features/components/floating_form/floating_form.dart';
+import 'package:travel_ai_agent/template/authentication_page.dart';
+import 'package:travel_ai_agent/tools/breakpoints.dart';
 
 class ForgotPassPage extends StatefulWidget {
   ForgotPassPage({super.key});
@@ -13,11 +15,21 @@ class ForgotPassPage extends StatefulWidget {
 
 class ForgotPassPageState extends State<ForgotPassPage> {
   final TextEditingController _emailController = TextEditingController();
+  late Breakpoint breakpoint;
+  late Size windowSize;
 
   @override
   void dispose() {
     _emailController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    breakpoint = MediaQueryController.getDeviceBreakpoint(context);
+    windowSize = MediaQueryController.getWindowSize(context);
   }
 
   @override
@@ -38,19 +50,13 @@ class ForgotPassPageState extends State<ForgotPassPage> {
       ),
     ];
 
-    return Scaffold(
-      body: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 50, right: 50),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FloatingForm(
+    return AuthenticationPage(
+      pageContent: FloatingForm(
                     heading: "Forgot Password",
                     subHeading: "Enter your email to receive a verification link",
                     textFields: forgotPassFields,
+                    breakpoint: breakpoint,
+                    windowSize: windowSize,
                     formButtons: [
                       FormButtonData(
                         label: "Send Verification E-mail",
@@ -65,76 +71,36 @@ class ForgotPassPageState extends State<ForgotPassPage> {
                           }
                         },
                       ),
+                      if(breakpoint == Breakpoint.compact || breakpoint == Breakpoint.medium)
+                        FormButtonData(
+                          label: "Back to Login",
+                          type: ButtonType.link,
+                          onPressed: (valid) {
+                            if(context.canPop()){
+                              context.pop();
+                            }else{
+                              context.go('/');
+                            }
+                          },
+                        )
                     ],
-                  ),
-                  const SizedBox(height: 10),
-                  DefaultButton(
-                    buttonData: FormButtonData(
-                      label: "Back to Login",
-                      type: ButtonType.link,
-                      onPressed: (valid) {
-                        if(context.canPop()){
-                          context.pop();
-                        }else{
-                          context.go('/');
-                        }
-                      },
-                    ),
-                    formKey: null
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("project_banner.jpg"),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    width: double.infinity,
-                    decoration: const BoxDecoration(color: Colors.red),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "Travel AI Agent",
-                            style: TextStyle(
-                              fontSize: 65,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
+                  ), 
+      alternativeButton: DefaultButton(
+                          buttonData: FormButtonData(
+                            label: "Back to Login",
+                            type: ButtonType.link,
+                            onPressed: (valid) {
+                              if(context.canPop()){
+                                context.pop();
+                              }else{
+                                context.go('/');
+                              }
+                            },
                           ),
-                          Text(
-                            "Discover the Amazing!",
-                            style: TextStyle(fontSize: 20, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+                          formKey: null
+                        ),
+      breakpoint: breakpoint, 
+      windowSize: windowSize);
   }
 
   Future<void> _resetPassword(String email, BuildContext context) async{

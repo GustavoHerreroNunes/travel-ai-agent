@@ -9,7 +9,8 @@ class FloatingForm extends StatefulWidget {
     this.subHeading,
     required this.textFields,
     required this.formButtons,
-    this.breakpoint = Breakpoint.expanded
+    this.breakpoint = Breakpoint.expanded,
+    this.windowSize
   });
 
   final String heading;
@@ -17,6 +18,7 @@ class FloatingForm extends StatefulWidget {
   final List<TextFormFieldData> textFields;
   final List<FormButtonData> formButtons;
   final Breakpoint breakpoint;
+  final Size? windowSize;
 
   @override
   State<FloatingForm> createState() => _FloatingFormState();
@@ -46,7 +48,12 @@ class _FloatingFormState extends State<FloatingForm> {
       : widget.breakpoint == Breakpoint.medium ? 20
       : 50;
 
-    return Container( 
+    final double headingFontSize =
+      widget.breakpoint == Breakpoint.compact 
+      ? 30
+      : 40;
+
+    Widget formBody = Container( 
       color: Color.fromRGBO(243, 243, 243, 1),
       child: Padding(padding: EdgeInsets.only(top: yPadding, bottom: yPadding, left: 25, right: 25), child: 
         Column(
@@ -55,7 +62,7 @@ class _FloatingFormState extends State<FloatingForm> {
           children: [
             Text(widget.heading, style: 
               TextStyle(
-                fontSize: 45,
+                fontSize: headingFontSize,
                 fontWeight: FontWeight.w600,
               )),
             Text(widget.subHeading ?? ""),
@@ -67,6 +74,16 @@ class _FloatingFormState extends State<FloatingForm> {
           ],
         ))
     );
+
+    return widget.breakpoint == Breakpoint.compact || widget.breakpoint == Breakpoint.medium
+      ? SizedBox(
+        height: widget.windowSize!.height,
+        width: widget.windowSize!.width,
+        child: formBody
+      )
+      : Container(
+        child: formBody,
+      );
   }
 }
 

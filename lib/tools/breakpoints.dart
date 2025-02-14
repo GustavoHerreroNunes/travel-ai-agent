@@ -13,6 +13,13 @@ class MediaQueryController {
     return MediaQuery.sizeOf(context).height;
   }
 
+  static Size getWindowSize(BuildContext context){
+    return Size(
+      MediaQueryController.getWindowWidth(context),
+      MediaQueryController.getWindowHeight(context)
+    );
+  }
+
   static Breakpoint getDeviceBreakpoint(BuildContext context){
     final double windowWidth = getWindowWidth(context);
     if(windowWidth <= _compact[0]){
