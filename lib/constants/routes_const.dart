@@ -10,12 +10,12 @@ final GoRouter routerConfig = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return LoginPage();
+        return HomePage();
       },
     ),
     GoRoute(
-      path: '/home',
-      builder: (context, state) => const HomePage(),
+      path: '/login',
+      builder: (context, state) => LoginPage(),
     ),
     GoRoute(
       path: '/signup',

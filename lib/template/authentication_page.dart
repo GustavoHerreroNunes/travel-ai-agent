@@ -26,7 +26,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("[breakpoint]: ${widget.breakpoint}");
+    // print("[breakpoint]: ${widget.breakpoint}");
 
     xPadding = widget.breakpoint == Breakpoint.compact ? 0 : 50;
 
