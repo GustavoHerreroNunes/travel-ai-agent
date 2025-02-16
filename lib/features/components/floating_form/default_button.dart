@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class DefaultButton extends StatefulWidget {
+  DefaultButton({
+    required this.buttonData, 
+    this.formKey,
+    this.width = double.infinity
+  });
+
   final FormButtonData buttonData;
   final GlobalKey<FormState>? formKey;
-
-  DefaultButton({required this.buttonData, this.formKey});
+  final double width;
 
   @override
   _DefaultButtonState createState() => _DefaultButtonState();
@@ -16,7 +21,7 @@ class _DefaultButtonState extends State<DefaultButton> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: widget.width,
       child: TextButton(
         onPressed: () async {
           setState(() {
