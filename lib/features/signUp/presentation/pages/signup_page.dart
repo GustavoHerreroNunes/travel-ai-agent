@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:travel_ai_agent/features/components/floating_form/default_button
 import 'package:travel_ai_agent/features/components/floating_form/floating_form.dart';
 import 'package:travel_ai_agent/template/authentication_page.dart';
 import 'package:travel_ai_agent/tools/breakpoints.dart';
+import 'package:http/http.dart' as http;
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({super.key});
@@ -143,9 +146,41 @@ class SignUpPageState extends State<SignUpPage> {
         'email': email
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Sign Up Successful!\n\nWelcome abord, Traveler!"))
-      );
+      userCredential.user?.getIdToken().then((token) async {
+        print("token: $token");
+
+        final response = await http.post(
+          Uri.parse("http://localhost:3000/"),
+          headers: {
+            'Authorization': 'Bearer $token'
+          },
+        );
+
+        if(response.statusCode == 200){
+          final body = json.decode(response.body);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Sign Up Successful!\n\nWelcome abord, Traveler!\n\nEmail: ${body['email']}"))
+          );
+        }else{
+          final errorMessage = json.decode(response.body)['error'];
+          
+          print(errorMessage);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error while trying authenticate user"))
+          );
+        }
+
+      }).catchError((err){
+        print(err);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error while trying authenticate user"))
+          );
+      });
+
+
 
     } on FirebaseAuthException catch (e){
       ScaffoldMessenger.of(context).showSnackBar(

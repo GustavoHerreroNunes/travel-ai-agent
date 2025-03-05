@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_ai_agent/features/components/all/logo_responsive.dart';
@@ -24,6 +25,16 @@ class _HomePageState extends State<HomePage> {
 
     breakpoint = MediaQueryController.getDeviceBreakpoint(context);
     windowSize = MediaQueryController.getWindowSize(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if(FirebaseAuth.instance.currentUser != null){
+      print("User logged in");
+    }else{
+      print("No session running...");
+    }
   }
 
   @override
